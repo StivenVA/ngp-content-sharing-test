@@ -13,5 +13,5 @@ public interface RatingService {
     void editRate(EditRateRequestDto editRateRequestDto);
     List<MediaRatingDto> getRatingsFromMediaContent(Long mediaContentId);
     Rating getRatingFromUserAndMediaContent(String username, Long mediaContentId);
-    void deleteRating(String username, Long mediaContentId);
+    void deleteRating(String username, Long ratingId);
 }

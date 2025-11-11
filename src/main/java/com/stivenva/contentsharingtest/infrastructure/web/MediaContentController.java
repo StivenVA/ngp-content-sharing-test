@@ -7,7 +7,6 @@ import com.stivenva.contentsharingtest.application.dto.response.MediaContentCrea
 import com.stivenva.contentsharingtest.application.dto.response.MediaContentResponseDto;
 import com.stivenva.contentsharingtest.application.port.media.MediaContentService;
 import com.stivenva.contentsharingtest.domain.model.Category;
-import com.stivenva.contentsharingtest.domain.model.MediaContent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -123,7 +122,5 @@ public class MediaContentController {
         mediaContentService.delete(id,username);
         return ResponseEntity.ok().build();
     }
-
-
 
 }

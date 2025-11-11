@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.core.Response;
 
 @RestController
 @RequestMapping("api/rating")
@@ -52,6 +53,10 @@ public class RatingController {
             throw new RuntimeException("Unauthenticated user");
         }
 
-        return null;
+        String username = authentication.getName();
+
+        ratingService.deleteRating(username,id);
+
+        return ResponseEntity.ok().build();
     }
 }

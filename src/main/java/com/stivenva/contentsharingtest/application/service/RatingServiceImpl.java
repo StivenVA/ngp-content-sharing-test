@@ -119,10 +119,18 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public void deleteRating(String username, Long mediaContentId) {
+    public void deleteRating(String username, Long ratingId) {
 
-        Rating ratingToDelete = getRatingFromUserAndMediaContent(username, mediaContentId);
+        Rating ratingToDelete = ratingRepository.findById(ratingId)
+                .orElseThrow(() -> new RuntimeException("Rating not found with id: " + ratingId));
+
+        User userRatingOwner = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+
+        if(ratingToDelete.userId() != userRatingOwner.id()){
+            throw new RuntimeException("User " + username + " is not the owner of the rating with id: " + ratingId);
+        }
+
         ratingRepository.delete(ratingToDelete);
-
     }
 }

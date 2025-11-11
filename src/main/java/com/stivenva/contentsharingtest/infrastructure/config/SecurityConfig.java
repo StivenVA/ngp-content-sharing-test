@@ -1,0 +1,67 @@
+package com.stivenva.contentsharingtest.infrastructure.config;
+
+import com.stivenva.contentsharingtest.application.port.auth.AuthService;
+import jakarta.servlet.http.Cookie; // Import Cookie
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final CognitoIdentityProviderClient cognitoClient;
+    private final AuthService authService;
+
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(new com.stivenva.contentsharingtest.infrastructure.security.JwtCookieAuthenticationFilter(cognitoClient), UsernamePasswordAuthenticationFilter.class)
+
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+
+                        .addLogoutHandler((request, _, _) -> {
+
+                            String accessToken = extractAccessTokenFromCookies(request.getCookies());
+                            if (accessToken != null) {
+                                authService.logout(accessToken);
+                            }
+                        })
+
+                        .deleteCookies(AuthService.ACCESS_TOKEN_COOKIE, AuthService.REFRESH_TOKEN_COOKIE)
+
+                        .logoutSuccessHandler((_,
+                                               response,
+                                               _) ->
+                                response.setStatus(200)
+                        )
+                );
+
+        return http.build();
+    }
+
+    private String extractAccessTokenFromCookies(Cookie[] cookies) {
+        if (cookies == null) return null;
+        for (Cookie c : cookies) {
+            if (AuthService.ACCESS_TOKEN_COOKIE.equals(c.getName())) {
+                return c.getValue();
+            }
+        }
+        return null;
+    }
+}

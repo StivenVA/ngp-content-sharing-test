@@ -4,11 +4,12 @@ import com.stivenva.contentsharingtest.application.dto.CreateMediaContentDto;
 import com.stivenva.contentsharingtest.application.dto.FilterMediaContentDto;
 import com.stivenva.contentsharingtest.application.dto.request.UpdateMediaDto;
 import com.stivenva.contentsharingtest.application.dto.response.MediaContentCreatedDto;
+import com.stivenva.contentsharingtest.application.dto.response.MediaContentResponseDto;
 import com.stivenva.contentsharingtest.application.port.media.MediaContentService;
 import com.stivenva.contentsharingtest.domain.model.Category;
 import com.stivenva.contentsharingtest.domain.model.MediaContent;
-import com.stivenva.contentsharingtest.domain.model.PageResult;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,10 +23,32 @@ public class MediaContentController {
 
     private final MediaContentService mediaContentService;
 
-    @GetMapping("/filter")
-    public ResponseEntity<PageResult<MediaContent>> filter(@RequestBody FilterMediaContentDto filterMediaContentDto) {
+    @GetMapping("/{id}")
+    public ResponseEntity<MediaContentResponseDto> getMediaContent(@PathVariable long id) {
+        return ResponseEntity.ok(mediaContentService.findById(id));
+    }
 
-        PageResult<MediaContent> result = mediaContentService.filter(filterMediaContentDto);
+    @GetMapping("/all")
+    public ResponseEntity<Page<MediaContentResponseDto>> getAllMediaContent(@RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.ok(mediaContentService.findAll(page,size));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Page<MediaContentResponseDto>> getMediaContentByUser(@RequestParam int page, @RequestParam int size) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getName() == null || auth.getName().isBlank()) {
+            throw new RuntimeException("Unauthenticated user");
+        }
+
+        String username = auth.getName();
+
+        return ResponseEntity.ok(mediaContentService.findByUserId(username,page,size));
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<Page<MediaContentResponseDto>> filter(@RequestBody FilterMediaContentDto filterMediaContentDto) {
+
+        Page<MediaContentResponseDto> result = mediaContentService.filter(filterMediaContentDto);
 
         if (result == null) {
             return ResponseEntity.badRequest().build();

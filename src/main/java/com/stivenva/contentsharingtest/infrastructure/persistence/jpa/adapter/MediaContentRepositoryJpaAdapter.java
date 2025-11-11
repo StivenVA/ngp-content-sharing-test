@@ -2,7 +2,6 @@ package com.stivenva.contentsharingtest.infrastructure.persistence.jpa.adapter;
 
 import com.stivenva.contentsharingtest.domain.model.Category;
 import com.stivenva.contentsharingtest.domain.model.MediaContent;
-import com.stivenva.contentsharingtest.domain.model.PageResult;
 import com.stivenva.contentsharingtest.infrastructure.mapper.MediaContentMapper;
 import com.stivenva.contentsharingtest.infrastructure.persistence.jpa.model.MediaContentEntity;
 import com.stivenva.contentsharingtest.infrastructure.persistence.jpa.repository.MediaContentRepository;
@@ -55,7 +54,7 @@ public class MediaContentRepositoryJpaAdapter implements com.stivenva.contentsha
     }
 
     @Override
-    public PageResult<MediaContent> filter(String title, String description, Category category, int page, int size) {
+    public Page<MediaContent> filter(String title, String description, Category category, int page, int size) {
         Pageable pageable = PageRequest.of(Math.max(page, 0), Math.max(size, 1));
         Specification<MediaContentEntity> spec = Specification.allOf();
 
@@ -70,8 +69,8 @@ public class MediaContentRepositoryJpaAdapter implements com.stivenva.contentsha
         }
 
         Page<MediaContentEntity> result = jpaRepository.findAll(spec, pageable);
-        List<MediaContent> items = result.getContent().stream().map(MediaContentMapper::toDomain).toList();
-        return new PageResult<>(items, result.getNumber(), result.getSize(), result.getTotalElements(), result.getTotalPages());
+
+        return result.map(MediaContentMapper::toDomain);
     }
 
 

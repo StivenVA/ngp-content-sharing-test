@@ -2,6 +2,7 @@ package com.stivenva.contentsharingtest.application.service;
 
 import com.stivenva.contentsharingtest.application.dto.request.EditRateRequestDto;
 import com.stivenva.contentsharingtest.application.dto.request.RateRequest;
+import com.stivenva.contentsharingtest.application.dto.response.MediaRatingDto;
 import com.stivenva.contentsharingtest.application.port.rating.RatingService;
 import com.stivenva.contentsharingtest.domain.model.MediaContent;
 import com.stivenva.contentsharingtest.domain.model.Rating;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -77,13 +80,31 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public List<Rating> getRatingsFromMediaContent(Long mediaContentId) {
+    public List<MediaRatingDto> getRatingsFromMediaContent(Long mediaContentId) {
 
         if(mediaContentId == null){
             throw new IllegalArgumentException("mediaContentId is required");
         }
 
-        return (List<Rating>) ratingRepository.findAllByMediaContentId(mediaContentId);
+        Iterable<Rating> ratingIterable = ratingRepository.findAllByMediaContentId(mediaContentId);
+
+        List<MediaRatingDto> ratings = new ArrayList<>();
+
+        for(Rating rating : ratingIterable){
+            MediaRatingDto mediaRatingDto = new MediaRatingDto();
+
+            mediaRatingDto.stars = rating.stars();
+            mediaRatingDto.comment = rating.comment();
+            mediaRatingDto.userId = rating.userId();
+
+            User user = userRepository.findById(rating.userId()).orElseThrow();
+            mediaRatingDto.userFirstName = user.firstname();
+            mediaRatingDto.userLastName = user.lastname();
+
+            ratings.add(mediaRatingDto);
+        }
+
+        return ratings;
     }
 
     @Override

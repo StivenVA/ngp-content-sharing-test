@@ -12,6 +12,7 @@ import com.stivenva.contentsharingtest.domain.port.repository.RatingRepository;
 import com.stivenva.contentsharingtest.domain.port.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,10 +57,12 @@ public class RatingServiceImpl implements RatingService {
         userRepository.updateRateCount(userRating.id());
     }
 
+    @PreAuthorize("@resourceAuthorizationService.isRatingOwner(#editRateRequestDto.username, #editRateRequestDto.ratingId)")
     @Override
     public void editRate(EditRateRequestDto editRateRequestDto) {
 
-        Rating existingRating = getRatingFromUserAndMediaContent(editRateRequestDto.username, editRateRequestDto.mediaContentId);
+        Rating existingRating = ratingRepository.findById(editRateRequestDto.ratingId)
+                .orElseThrow(() -> new RuntimeException("Rating not found with id: " + editRateRequestDto.ratingId));
         Double newRatingValue = editRateRequestDto.rating;
 
         if(newRatingValue < 1 || newRatingValue > 5){
@@ -118,18 +121,11 @@ public class RatingServiceImpl implements RatingService {
                 .orElseThrow(()-> new RuntimeException("Rating not found for user: " + username + " and mediaContentId: " + mediaContentId));
     }
 
+    @PreAuthorize("@resourceAuthorizationService.isRatingOwner(#username, #ratingId)")
     @Override
     public void deleteRating(String username, Long ratingId) {
-
         Rating ratingToDelete = ratingRepository.findById(ratingId)
                 .orElseThrow(() -> new RuntimeException("Rating not found with id: " + ratingId));
-
-        User userRatingOwner = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
-
-        if(ratingToDelete.userId() != userRatingOwner.id()){
-            throw new RuntimeException("User " + username + " is not the owner of the rating with id: " + ratingId);
-        }
 
         ratingRepository.delete(ratingToDelete);
     }

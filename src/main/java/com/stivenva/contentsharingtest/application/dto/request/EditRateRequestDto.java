@@ -6,5 +6,6 @@ public class EditRateRequestDto {
     public String username;
     public Long mediaContentId;
     public Double rating;
+    public Long ratingId;
 
 }

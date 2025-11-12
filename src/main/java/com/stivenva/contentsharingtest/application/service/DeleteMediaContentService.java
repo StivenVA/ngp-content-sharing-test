@@ -3,17 +3,13 @@ package com.stivenva.contentsharingtest.application.service;
 import com.stivenva.contentsharingtest.application.port.media.DeleteMediaContent;
 import com.stivenva.contentsharingtest.domain.model.MediaContent;
 import com.stivenva.contentsharingtest.domain.model.Rating;
-import com.stivenva.contentsharingtest.domain.model.User;
 import com.stivenva.contentsharingtest.domain.port.StorageService;
 import com.stivenva.contentsharingtest.domain.port.repository.MediaContentRepository;
 import com.stivenva.contentsharingtest.domain.port.repository.RatingRepository;
-import com.stivenva.contentsharingtest.domain.port.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.stivenva.contentsharingtest.application.util.S3UrlKeyExtractor.extractKeyFromUrl;
 

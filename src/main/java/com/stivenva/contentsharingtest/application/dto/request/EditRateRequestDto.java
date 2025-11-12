@@ -5,7 +5,7 @@ public class EditRateRequestDto {
     public String comment;
     public String username;
     public Long mediaContentId;
-    public Double rating;
+    public Double stars;
     public Long ratingId;
 
 }

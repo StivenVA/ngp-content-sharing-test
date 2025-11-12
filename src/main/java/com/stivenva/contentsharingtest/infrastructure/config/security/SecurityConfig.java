@@ -30,7 +30,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/api/auth/**",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtCookieAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -38,7 +45,7 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
 
-                        .addLogoutHandler((request, _, _) -> {
+                        .addLogoutHandler((request, response, auth) -> {
 
                             String accessToken = extractAccessTokenFromCookies(request.getCookies());
                             if (accessToken != null) {
@@ -46,9 +53,9 @@ public class SecurityConfig {
                             }
                         })
                         .deleteCookies(AuthService.ACCESS_TOKEN_COOKIE, AuthService.REFRESH_TOKEN_COOKIE)
-                        .logoutSuccessHandler((_,
+                        .logoutSuccessHandler((request,
                                                response,
-                                               _) ->
+                                               auth) ->
                                 response.setStatus(200)
                         )
                 ).exceptionHandling(exception -> {

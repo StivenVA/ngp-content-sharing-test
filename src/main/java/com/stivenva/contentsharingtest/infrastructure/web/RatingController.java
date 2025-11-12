@@ -5,11 +5,8 @@ import com.stivenva.contentsharingtest.application.dto.request.RateRequest;
 import com.stivenva.contentsharingtest.application.port.rating.RatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import software.amazon.awssdk.core.Response;
 
 @RestController
 @RequestMapping("api/rating")

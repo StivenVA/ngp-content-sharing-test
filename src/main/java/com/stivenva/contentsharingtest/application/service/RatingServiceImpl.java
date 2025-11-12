@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -63,7 +62,7 @@ public class RatingServiceImpl implements RatingService {
 
         Rating existingRating = ratingRepository.findById(editRateRequestDto.ratingId)
                 .orElseThrow(() -> new RuntimeException("Rating not found with id: " + editRateRequestDto.ratingId));
-        Double newRatingValue = editRateRequestDto.rating;
+        Double newRatingValue = editRateRequestDto.stars;
 
         if(newRatingValue < 1 || newRatingValue > 5){
             throw new IllegalArgumentException("Rating must be between 1 and 5");

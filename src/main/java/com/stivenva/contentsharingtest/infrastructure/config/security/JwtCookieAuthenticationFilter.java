@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.GetUserRequest;
@@ -21,7 +22,7 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.NotAuthoriz
 import java.io.IOException;
 import java.util.List;
 
-@Configuration
+@Component
 @RequiredArgsConstructor
 public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
 
@@ -30,30 +31,27 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-
-        if (path == null || !path.startsWith("/api/auth/")) {
-
-            String accessToken = extractAccessTokenFromCookies(request.getCookies());
-            if (accessToken != null && !accessToken.isBlank()) {
-                try {
-                    GetUserResponse userResponse = cognitoClient.getUser(GetUserRequest.builder().accessToken(accessToken).build());
-                    if (userResponse != null && userResponse.username() != null) {
-                        Authentication auth = new UsernamePasswordAuthenticationToken(
-                                userResponse.username(),
-                                null,
-                                List.of(new SimpleGrantedAuthority("ROLE_USER"))
-                        );
-                        SecurityContextHolder.getContext().setAuthentication(auth);
-                    }
-                } catch (NotAuthorizedException ex) {
-                } catch (Exception e) {
+        String accessToken = extractAccessTokenFromCookies(request.getCookies());
+        if (accessToken != null && !accessToken.isBlank()) {
+            try {
+                GetUserResponse userResponse = cognitoClient.getUser(GetUserRequest.builder().accessToken(accessToken).build());
+                if (userResponse != null && userResponse.username() != null) {
+                    Authentication auth = new UsernamePasswordAuthenticationToken(
+                            userResponse.username(),
+                            null,
+                            List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(auth);
                 }
+            } catch (NotAuthorizedException ex) {
+            } catch (Exception e) {
             }
         }
 
+
         filterChain.doFilter(request, response);
     }
+
     private String extractAccessTokenFromCookies(Cookie[] cookies) {
         if (cookies == null) return null;
         for (Cookie c : cookies) {

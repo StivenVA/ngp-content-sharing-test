@@ -9,6 +9,7 @@ import com.stivenva.contentsharingtest.application.port.media.MediaContentServic
 import com.stivenva.contentsharingtest.domain.model.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,10 @@ public class MediaContentController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/create")
+    @PostMapping(
+            value= "/create",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<MediaContentCreatedDto> create(
             @RequestPart("mediaContent") MultipartFile mediaContent,
             @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail,
@@ -72,7 +76,10 @@ public class MediaContentController {
         return ResponseEntity.ok(saved);
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping(
+            value="update/{id}"
+    ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<MediaContentCreatedDto> updateMediaContent(
             @RequestPart(required = false) MultipartFile newThumbnail,
             @RequestParam(required = false) String description,

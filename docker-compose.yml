@@ -1,0 +1,43 @@
+services:
+  db:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: content_sharing_test
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-ppassword123", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    container_name: content-sharing-test
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/content_sharing_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password123
+
+      # AWS creds you said you need:
+      AWS_ACCESS_KEY_ID: your_access_key_id
+      AWS_SECRET_ACCESS_KEY: your_secret_access_key
+      AWS_REGION: us-east-1
+
+      # Optional: don’t fail fast on first missed connection
+      SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT: "0"
+    ports:
+      - "8080:8080"
+    command: >
+      sh -c "until nc -z db 3306; do echo 'waiting for db...'; sleep 2; done;
+             java -jar /app/app.jar"
+
+volumes:
+  dbdata:

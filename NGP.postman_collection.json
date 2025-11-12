@@ -1,0 +1,423 @@
+{
+	"info": {
+		"_postman_id": "29072d92-1670-4224-be88-b085e0ab0f97",
+		"name": "NGP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28737254",
+		"_collection_link": "https://clubhive.postman.co/workspace/ClubhiveDev~3e72dba9-01da-4543-832c-adaa120c6bcd/collection/28737254-29072d92-1670-4224-be88-b085e0ab0f97?action=share&source=collection_link&creator=28737254"
+	},
+	"item": [
+		{
+			"name": "authentication",
+			"item": [
+				{
+					"name": "sign up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\":\"Stiven\",\r\n    \"lastname\":\"Villarraga\",\r\n    \"email\":\"stivenv.ariza@gmail.com\",\r\n    \"password\":\"Chancleta123.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/auth/register",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirm account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/auth/verify?email=stivenv.ariza@gmail.com&code=870944",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"verify"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "stivenv.ariza@gmail.com"
+								},
+								{
+									"key": "code",
+									"value": "870944"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"stivenv.ariza@gmail.com\",\r\n    \"password\":\"Chancleta123.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "media",
+			"item": [
+				{
+					"name": "get all user media",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/media/user?page=0&size=100",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"media",
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all media",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/media/all?page=0&size=100",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"media",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get media by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/media/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"media",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create media",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mediaContent",
+									"type": "file",
+									"src": "/C:/Users/StivenVillarraga/Downloads/ccaa92b9-3583-4c27-8815-91d50bd7172b.mp4"
+								},
+								{
+									"key": "thumbnail",
+									"type": "file",
+									"src": "/C:/Users/StivenVillarraga/Downloads/sddefault.jpg"
+								},
+								{
+									"key": "description",
+									"value": "Song slowtown by twenty one pilots",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "MUSIC",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "Slowtown by twenty one pilots | Regional at best",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/api/media/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"media",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete media",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/media/delete/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"media",
+								"delete",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update media",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "accessToken=eyJraWQiOiJqZ0t6U1BzSXZGNjNTRFcrclwvZnhqTFwvdHU3UDRZRjZqVTl4cGV2ZlNraG89IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJiNDI4NjRhOC0xMDQxLTcwNDktZDVkMy03MzM4OTA5NjA1NjMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV80ZFlybENGemMiLCJjbGllbnRfaWQiOiI0aXZrZTg2OXR0Ym9xdHA0bjNzc20xamM4ciIsIm9yaWdpbl9qdGkiOiI0NTExNzkxMC1iMzc2LTQ2YjctODlhMi00M2IzNDI2N2NiN2QiLCJldmVudF9pZCI6IjE0ZGYyOGQzLTA2MmItNGJhNy1hOTU1LTgzMjY2ZjZiMWE4YyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NjI4ODQxMzYsImV4cCI6MTc2Mjg4NzczNiwiaWF0IjoxNzYyODg0MTM2LCJqdGkiOiIyN2QzZjQzNC0zZmEyLTQwMTUtYWJmYi0xNDY3ODkzZDJmM2IiLCJ1c2VybmFtZSI6ImI0Mjg2NGE4LTEwNDEtNzA0OS1kNWQzLTczMzg5MDk2MDU2MyJ9.OI4GSleW76q7mJgN0V4ENA9Un9FzyKxWf9JLRkG977kJKll3YvAX_BKWgonvtg4mTxwhAas9OOc0v2rjQXXRJKRlrgNm0qfnSgN6fjARqq94VQB1eCuf1vFo8LgsCjSkGHJeDa4eBLfVbL8OCPjEzTcS2YaLZ6WucrUGDH2E89Dw3KY2Rv8vqP6CYBpq7SpfVximNf2OLgXOWwePrsfxR2JyUTRR6KWTs-FscwwZ9pSXrg39fKk3XHeAVeGN5bZR4qmxfBDqlno9ZZjIOClWRS6A4H565h2s431RNbcjYWx-ru6_Fmjpz2fng8tvQuTWL-LC_ezSvXw-RnlPn_GHqA; refreshToken=eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.AKEhWrFJS6PDJceNEXiwc4HLlTa-kMljgc2tI3yASywHTYm6H6bM09jrc1xZvsHqSOF9yVu47M6onyEJhE-5SsDKgT5qdJYUVxDRu2gu3fuhwGwsTYAM72BMfLqW23YrIQIshYUuWPRGL_2bkeiWRCJdKfSCp_n1sXgSB2oX3ZBTtATzog2lnWb2-0GRa_GNCuxAEz7BibWPiPdHmihAlSngw72F9Du2SBSUeaTTLmKaTNzNbX5F1eUdigpRabQbimsDryjjtWp6Rocd7aKZ1Yd2uLTTRAy1AizuUZwzhpdIauZQQaZoTNb4vSHZ-NS4MwefDsdnulPSABmHOcDTyg.eXgWv3BxaImB-LFU.Jz_V09G6VDoXSxyeZeXGNQO8EQKIyffNeEPgfUZbWaqhkHytJz9Pjjmyr30cmzHYOyeHjXl7o0W6xc77mmbvrOrDGTj723KN2tQ-HjLNOiLSCKiuC6KfIEbDYk7Ko2Ce6E3eXh_aFTdT2_9k-oh3HYoCn5X2zQ2zXHOXYb9UFvO_77ctUFTq94YKxFAzX9s_pqAsNjoL567YHhn4Sf8oeSTQcwLJ5gLe0VRFLaD1gpRQQPJXOwqzFpDMr5obUHEvEcdT4fyTO0hEk4sfeDVtj9D2LnEAHo33uEW0vTGCy2aUdTIU-eKxtFRrn6L2tHP0A0LtXaaIM3k9qWNp2rAQExWpsTR11QANG-E05NiBGU5n_wVTiJO9Ie70254uGbjY-dTZB0PORkCEcUSEoYGXAunDw0g0j5EMN635-NfEAT99ZDV8H5ujc8eQwxJjxCV8y9EeE79D62g32gd-Ec84X6LCqVvxFisN6i1V-R6OS97xBrU0lD-J63kPeEhLbPJLvY-JCFIFhHmK9T7GUZxjXl5t05gPVizeo1LZ6K2c559uHEHxatxCkArb1EeHk-Q2-gLqANHgiuJp3RLtTgqOkcSIRgm1r6haNCKUBatIDyG0wRQQQrRZYm8g9h9NtKyh8z0UVSMTfZ7IPqBnE88INbgn5aN-PInoajBUzEOnyoZbnTwau17hprDjfoFijpAgGxrTcXGj3GaS_RVj20QZhr451WT8kzHDnalqLXG_yJhfqfu0VVIS122Cfwc1vmSjLEErDrHoWTkDMkVIFhxS9bk_7ENja20t6N72rZzloESBydsD69G4V_CW2Mrwcpu_uaEwaB331KjtzhyhbaPwYGYiawOzssFR-3qEwGQHeYd46rwInQ2MopeTh8FVYaXVBzK1RNeSgjF9wGzDL9jMvkYwPLrOVltr3TM5WdSE8MpbiXDTH2snlgITf_66o9pGEzrLpVX3A56svPb4Qo2TUbpFR0MQPw7oPFT1x6W5Smt0luiMtw3zSNCLR0HIFAPJzuxe5cc_EnM8FUiHiG9FGZOO0xTv7nTn2oX98OfDRCsQy2LtES2x2fKSiFDadqV47w0grA559j8HHBNuLULxJRE4Q93cpAplOT3euRm2bsLed8bt4fyZkizRgcqNfi2qDVC-M0xO1IzEzAo_B6U2zrvOXqG8lUDvg_iOFQKFOjH6bGeOVIejKHf7pQ8hFfrrXusjj0Pf0acPRd7CCpE17Tjy7EU0vJ8ZMTX3FkdcoNRI4FCeebC2BNu6WqYl30gENCFjPYUinZrSw4hClKLEgjdXNQQXpduGAh0upO-sPXJ1wUCh4b-hgp_sjw.ZTKtnnvEaJ2J2fcHLHnxCA"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mediaContent",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "thumbnail",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "Song slowtown",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "MUSIC",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "title",
+									"value": "Slowtown by twenty one pilots | Regional at best",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/api/media/update/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"media",
+								"update",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter media content",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category\":\"MUSIC\",\r\n    \"page\":0,\r\n    \"size\":100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/media/filter",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"media",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "rating",
+			"item": [
+				{
+					"name": "rate",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"stars\":1,\r\n    \"comment\":\"The worst song I've heard >:((((\",\r\n    \"mediaContentId\":3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/rating/rate",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"rating",
+								"rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete rating",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/rating/delete/8",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"rating",
+								"delete",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit rate",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -26,12 +26,6 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password123
 
-      # AWS creds you said you need:
-      AWS_ACCESS_KEY_ID: your_access_key_id
-      AWS_SECRET_ACCESS_KEY: your_secret_access_key
-      AWS_REGION: us-east-1
-
-      # Optional: don’t fail fast on first missed connection
       SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT: "0"
     ports:
       - "8080:8080"

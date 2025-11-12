@@ -99,7 +99,6 @@ docker run --rm -p 8080:8080 \
 ## docker-compose (recommended)
 
 ```yaml
-version: "3.9"
 services:
   db:
     image: mysql:8
@@ -112,10 +111,10 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-ppassword123"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-ppassword123", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   app:
     build: .
@@ -124,14 +123,20 @@ services:
       db:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/content_sharing_test?useSSL=false&serverTimezone=UTC"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/content_sharing_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password123
+
+      SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT: "0"
     ports:
       - "8080:8080"
+    command: >
+      sh -c "until nc -z db 3306; do echo 'waiting for db...'; sleep 2; done;
+             java -jar /app/app.jar"
 
 volumes:
   dbdata:
+
 ```
 
 Run everything:

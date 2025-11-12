@@ -6,6 +6,7 @@ import com.stivenva.contentsharingtest.application.port.rating.RatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.core.Response;
@@ -18,14 +19,11 @@ public class RatingController {
     private final RatingService ratingService;
 
     @PostMapping("rate")
-    public ResponseEntity<Void> rateMediaContent(@RequestBody RateRequest rateRequest) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication.getName() == null || authentication.getName().isBlank()) {
-            throw new RuntimeException("Unauthenticated user");
-        }
-
-        rateRequest.username = authentication.getName();
+    public ResponseEntity<Void> rateMediaContent(
+            @RequestBody RateRequest rateRequest,
+            @AuthenticationPrincipal String username
+    ) {
+        rateRequest.username = username;
 
         ratingService.rate(rateRequest);
 
@@ -33,13 +31,13 @@ public class RatingController {
     }
 
     @PutMapping("edit")
-    public ResponseEntity<Void> editRate(@RequestBody EditRateRequestDto editRateRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication.getName() == null || authentication.getName().isBlank()) {
-            throw new RuntimeException("Unauthenticated user");
-        }
+    public ResponseEntity<Void> editRate(
+            @RequestBody EditRateRequestDto editRateRequest,
+            @AuthenticationPrincipal String username
 
-        editRateRequest.username = authentication.getName();
+    ) {
+
+        editRateRequest.username = username;
         ratingService.editRate(editRateRequest);
 
         return ResponseEntity.ok().build();
@@ -47,14 +45,10 @@ public class RatingController {
 
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication.getName() == null || authentication.getName().isBlank()) {
-            throw new RuntimeException("Unauthenticated user");
-        }
-
-        String username = authentication.getName();
-
+    public ResponseEntity<Void> delete(
+            @PathVariable long id,
+            @AuthenticationPrincipal String username
+    ){
         ratingService.deleteRating(username,id);
 
         return ResponseEntity.ok().build();

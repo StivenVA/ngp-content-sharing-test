@@ -10,8 +10,7 @@ import com.stivenva.contentsharingtest.domain.model.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,13 +32,11 @@ public class MediaContentController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<Page<MediaContentResponseDto>> getMediaContentByUser(@RequestParam int page, @RequestParam int size) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || auth.getName() == null || auth.getName().isBlank()) {
-            throw new RuntimeException("Unauthenticated user");
-        }
-
-        String username = auth.getName();
+    public ResponseEntity<Page<MediaContentResponseDto>> getMediaContentByUser(
+            @RequestParam int page,
+            @RequestParam int size,
+            @AuthenticationPrincipal String username
+    ) {
 
         return ResponseEntity.ok(mediaContentService.findByUserId(username,page,size));
     }
@@ -62,19 +59,14 @@ public class MediaContentController {
             @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail,
             @RequestParam("description") String description,
             @RequestParam("category") Category category,
-            @RequestParam("title") String title
+            @RequestParam("title") String title,
+            @AuthenticationPrincipal String username
     ) {
         CreateMediaContentDto dto = new CreateMediaContentDto();
         dto.title = title;
         dto.description = description;
         dto.category = category;
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || auth.getName() == null || auth.getName().isBlank()) {
-            throw new RuntimeException("Unauthenticated user");
-        }
-
-        dto.username = auth.getName();
+        dto.username = username;
 
         MediaContentCreatedDto saved = mediaContentService.create(mediaContent, thumbnail, dto);
         return ResponseEntity.ok(saved);
@@ -86,8 +78,9 @@ public class MediaContentController {
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) Category category,
-            @PathVariable long id
-            ){
+            @PathVariable long id,
+            @AuthenticationPrincipal String username
+    ){
 
         UpdateMediaDto dto = new UpdateMediaDto();
         dto.id = id;
@@ -95,13 +88,7 @@ public class MediaContentController {
         dto.description = description;
         dto.category = category!=null?category.name():null;
         dto.thumbnail = newThumbnail;
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || auth.getName() == null || auth.getName().isBlank()) {
-            throw new RuntimeException("Unauthenticated user");
-        }
-
-        dto.username = auth.getName();
+        dto.username = username;
 
         mediaContentService.update(dto);
 
@@ -110,14 +97,7 @@ public class MediaContentController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id){
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || auth.getName() == null || auth.getName().isBlank()) {
-            throw new RuntimeException("Unauthenticated user");
-        }
-
-        String username = auth.getName();
+    public ResponseEntity<Void> delete(@PathVariable long id,@AuthenticationPrincipal String username){
 
         mediaContentService.delete(id,username);
         return ResponseEntity.ok().build();

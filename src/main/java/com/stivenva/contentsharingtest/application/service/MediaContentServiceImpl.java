@@ -13,6 +13,7 @@ import com.stivenva.contentsharingtest.domain.model.User;
 import com.stivenva.contentsharingtest.infrastructure.persistence.jpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,11 +36,13 @@ public class MediaContentServiceImpl implements MediaContentService {
         return createMediaContentService.create(media, thumbnail, createMediaContentDto);
     }
 
+    @PreAuthorize("@resourceAuthorizationService.isMediaOwner(#username, #id)")
     @Override
-    public void delete(long id,String userEmail) {
-        deleteMediaContentService.delete(id,userEmail);
+    public void delete(long id,String username) {
+        deleteMediaContentService.delete(id,username);
     }
 
+    @PreAuthorize("@resourceAuthorizationService.isMediaOwner(#updateMediaDto.username, #updateMediaDto.id)")
     @Override
     public MediaContentCreatedDto update(UpdateMediaDto updateMediaDto) {
         return createMediaContentService.update(updateMediaDto);

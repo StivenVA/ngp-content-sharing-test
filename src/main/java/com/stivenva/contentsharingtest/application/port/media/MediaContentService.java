@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface MediaContentService {
     Page<MediaContentResponseDto> filter(FilterMediaContentDto filterMediaContentDto);
     MediaContentCreatedDto create(MultipartFile media, MultipartFile thumbnail, CreateMediaContentDto createMediaContentDto);
-    void delete(long id,String userEmail);
+    void delete(long id,String username);
     MediaContentCreatedDto update(UpdateMediaDto updateMediaDto);
     MediaContentResponseDto findById(long id);
     Page<MediaContentResponseDto> findAll(int page, int size);

@@ -62,7 +62,6 @@ public class CreateMediaContentService implements CreateMediaContent {
         }
     }
 
-    @PreAuthorize("@resourceAuthorizationService.isMediaOwner(#updateMediaDto.username, #updateMediaDto.id)")
     @Override
     public MediaContentCreatedDto update(UpdateMediaDto updateMediaDto) {
 

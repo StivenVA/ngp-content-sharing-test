@@ -11,6 +11,7 @@ import com.stivenva.contentsharingtest.domain.port.StorageService;
 import com.stivenva.contentsharingtest.domain.port.repository.MediaContentRepository;
 import com.stivenva.contentsharingtest.domain.port.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,17 +62,12 @@ public class CreateMediaContentService implements CreateMediaContent {
         }
     }
 
+    @PreAuthorize("@resourceAuthorizationService.isMediaOwner(#updateMediaDto.username, #updateMediaDto.id)")
     @Override
     public MediaContentCreatedDto update(UpdateMediaDto updateMediaDto) {
 
-        User userMediaCreator = userRepository.findByUsername(updateMediaDto.username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + updateMediaDto.username));
-
         MediaContent mediaToUpdate = mediaContentRepository.findById(updateMediaDto.id)
                 .orElseThrow(() -> new RuntimeException("Media not found: " + updateMediaDto.id));
-
-        if (mediaToUpdate.userId() != userMediaCreator.id())
-            throw new RuntimeException("User does not have permission to update this media");
 
         mediaToUpdate = updateMediaFields(updateMediaDto,mediaToUpdate);
 
@@ -145,6 +141,7 @@ public class CreateMediaContentService implements CreateMediaContent {
         result.description = saved.description();
         result.category = saved.category().name();
         result.thumbnailUrl = saved.thumbnailUrl();
+        result.mediaUrl = saved.contentUrl();
 
         return result;
     }

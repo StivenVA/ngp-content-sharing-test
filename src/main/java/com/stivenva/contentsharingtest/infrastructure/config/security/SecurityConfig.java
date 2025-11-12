@@ -1,10 +1,11 @@
-package com.stivenva.contentsharingtest.infrastructure.config;
+package com.stivenva.contentsharingtest.infrastructure.config.security;
 
 import com.stivenva.contentsharingtest.application.port.auth.AuthService;
 import jakarta.servlet.http.Cookie; // Import Cookie
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,11 +16,13 @@ import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityPr
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    private final CognitoIdentityProviderClient cognitoClient;
     private final AuthService authService;
-
+    private final JwtCookieAuthenticationFilter jwtCookieAuthenticationFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,7 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new com.stivenva.contentsharingtest.infrastructure.security.JwtCookieAuthenticationFilter(cognitoClient), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtCookieAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
@@ -42,14 +45,17 @@ public class SecurityConfig {
                                 authService.logout(accessToken);
                             }
                         })
-
                         .deleteCookies(AuthService.ACCESS_TOKEN_COOKIE, AuthService.REFRESH_TOKEN_COOKIE)
-
                         .logoutSuccessHandler((_,
                                                response,
                                                _) ->
                                 response.setStatus(200)
                         )
+                ).exceptionHandling(exception -> {
+
+                            exception.authenticationEntryPoint(customAuthenticationEntryPoint);
+                            exception.accessDeniedHandler(customAccessDeniedHandler);
+                        }
                 );
 
         return http.build();

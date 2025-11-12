@@ -81,7 +81,7 @@ public class MediaContentController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<MediaContentCreatedDto> updateMedia(
+    public ResponseEntity<MediaContentCreatedDto> updateMediaContent(
             @RequestPart(required = false) MultipartFile newThumbnail,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String title,

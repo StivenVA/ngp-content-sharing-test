@@ -1,4 +1,4 @@
-package com.stivenva.contentsharingtest.infrastructure.security;
+package com.stivenva.contentsharingtest.infrastructure.config.security;
 
 import com.stivenva.contentsharingtest.application.service.AuthServiceImpl;
 import jakarta.servlet.FilterChain;
@@ -6,13 +6,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.GetUserRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.GetUserResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.NotAuthorizedException;
@@ -20,13 +21,11 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.NotAuthoriz
 import java.io.IOException;
 import java.util.List;
 
+@Configuration
+@RequiredArgsConstructor
 public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
 
     private final CognitoIdentityProviderClient cognitoClient;
-
-    public JwtCookieAuthenticationFilter(CognitoIdentityProviderClient cognitoClient) {
-        this.cognitoClient = cognitoClient;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

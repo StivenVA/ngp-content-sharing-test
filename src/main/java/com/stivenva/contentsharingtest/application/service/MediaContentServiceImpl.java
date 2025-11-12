@@ -45,6 +45,11 @@ public class MediaContentServiceImpl implements MediaContentService {
         return createMediaContentService.update(updateMediaDto);
     }
 
+    @Override
+    public MediaContentResponseDto findById(long id) {
+        return mediaContentFilterService.findById(id);
+    }
+
     public Page<MediaContentResponseDto> findAll(int page, int size) {
         return mediaContentFilterService.findAll(page,size);
     }

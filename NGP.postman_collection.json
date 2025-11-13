@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstname\":\"Stiven\",\r\n    \"lastname\":\"Villarraga\",\r\n    \"email\":\"stivenv.ariza@gmail.com\",\r\n    \"password\":\"Chancleta123.\"\r\n}",
+							"raw": "{\r\n    \"firstname\":\"Jhonnathan Stiven\",\r\n    \"lastname\":\"Villarraga\",\r\n    \"email\":\"jackstivenariza123@gmail.com\",\r\n    \"password\":\"Password123.\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -45,7 +45,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/auth/verify?email=stivenv.ariza@gmail.com&code=870944",
+							"raw": "localhost:8080/api/auth/verify?email=jackstivenariza123@gmail.com&code=587594",
 							"host": [
 								"localhost"
 							],
@@ -58,11 +58,11 @@
 							"query": [
 								{
 									"key": "email",
-									"value": "stivenv.ariza@gmail.com"
+									"value": "jackstivenariza123@gmail.com"
 								},
 								{
 									"key": "code",
-									"value": "870944"
+									"value": "587594"
 								}
 							]
 						}
@@ -79,7 +79,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"stivenv.ariza@gmail.com\",\r\n    \"password\":\"Chancleta123.\"\r\n}",
+							"raw": "{\r\n    \"email\":\"stivenv.ariza@gmail.com\",\r\n    \"password\":\"Password123.\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -200,26 +200,27 @@
 								{
 									"key": "mediaContent",
 									"type": "file",
-									"src": "/C:/Users/StivenVillarraga/Downloads/ccaa92b9-3583-4c27-8815-91d50bd7172b.mp4"
+									"src": "/C:/Users/StivenVillarraga/Downloads/content-sharing-architecture.drawio (5).png"
 								},
 								{
 									"key": "thumbnail",
 									"type": "file",
-									"src": "/C:/Users/StivenVillarraga/Downloads/sddefault.jpg"
+									"src": [],
+									"disabled": true
 								},
 								{
 									"key": "description",
-									"value": "Song slowtown by twenty one pilots",
+									"value": "Architecture",
 									"type": "text"
 								},
 								{
 									"key": "category",
-									"value": "MUSIC",
+									"value": "ARTWORK",
 									"type": "text"
 								},
 								{
 									"key": "title",
-									"value": "Slowtown by twenty one pilots | Regional at best",
+									"value": "Project architecture",
 									"type": "text"
 								}
 							]
@@ -245,7 +246,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/media/delete/2",
+							"raw": "localhost:8080/api/media/delete/7",
 							"host": [
 								"localhost"
 							],
@@ -254,7 +255,7 @@
 								"api",
 								"media",
 								"delete",
-								"2"
+								"7"
 							]
 						}
 					},
@@ -329,7 +330,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"category\":\"MUSIC\",\r\n    \"page\":0,\r\n    \"size\":100\r\n}",
+							"raw": "{\r\n    \"category\":\"GAME\",\r\n    \"page\":0,\r\n    \"size\":100\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -366,7 +367,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"stars\":1,\r\n    \"comment\":\"The worst song I've heard >:((((\",\r\n    \"mediaContentId\":3\r\n}",
+							"raw": "{\r\n    \"stars\":1.5,\r\n    \"comment\":\"I really love this\",\r\n    \"mediaContentId\":6\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -389,6 +390,14 @@
 					"response": []
 				},
 				{
+					"name": "edit rate",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
 					"name": "delete rating",
 					"request": {
 						"method": "DELETE",
@@ -406,14 +415,6 @@
 								"8"
 							]
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "edit rate",
-					"request": {
-						"method": "GET",
-						"header": []
 					},
 					"response": []
 				}
